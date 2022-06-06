@@ -1,21 +1,3 @@
-/***************************************************************************************
- * Faculty of Electrical Engineering, Computer Science and Information Technology Osijek
- *
- * -----------------------------------------------------
- * Project assignment from the course: DIGITAL IMAGE PROCESSING DAKR4I-01
- * -----------------------------------------------------
- * Assignment title: TV application (code: PPUTVIOS_20_2018_OS)
- * -----------------------------------------------------
- * \file configuration_parser.h
- *
- * \brief
- * Header of the module for loading and parsing initial .xml configuration file.
- *
- * Last updated on 4 June 2018
- *
- * @Author Luka Umiljanović
- ***************************************************************************************/
-
 #ifndef _CONFIGURATION_PARSER_H_
 #define _CONFIGURATION_PARSER_H_
 

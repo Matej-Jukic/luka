@@ -1,21 +1,3 @@
-/***************************************************************************************
- * Faculty of Electrical Engineering, Computer Science and Information Technology Osijek
- *
- * -----------------------------------------------------
- * Project assignment from the course: DIGITAL IMAGE PROCESSING DAKR4I-01
- * -----------------------------------------------------
- * Assignment title: TV application (code: PPUTVIOS_20_2018_OS)
- * -----------------------------------------------------
- * \file timer_controller.c
- *
- * \brief
- * Implementation of the module for timers.
- *
- * Last updated on 4 June 2018
- *
- * @Author Luka Umiljanović
- ***************************************************************************************/
-
 #include "timer_controller.h"
 
 #include <signal.h>

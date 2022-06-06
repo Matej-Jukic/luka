@@ -1,21 +1,3 @@
-/***************************************************************************************
- * Faculty of Electrical Engineering, Computer Science and Information Technology Osijek
- *
- * -----------------------------------------------------
- * Project assignment from the course: DIGITAL IMAGE PROCESSING DAKR4I-01
- * -----------------------------------------------------
- * Assignment title: TV application (code: PPUTVIOS_20_2018_OS)
- * -----------------------------------------------------
- * \file graphics_controller.c
- *
- * \brief
- * Implementation of the module for handling graphics.
- *
- * Last updated on 4 June 2018
- *
- * @Author Luka Umiljanović
- ***************************************************************************************/
-
 #include "graphics_controller.h"
 
 #include <stdio.h>
@@ -24,8 +6,7 @@
 
 #include "timer_controller.h"
 
-/* helper macro functions needed only for graphics controller module */
-#define DEGREES_TO_RADIANS(deg) ((deg)*M_PI / 180.0)
+
 // https://stackoverflow.com/questions/2570934/how-to-round-floating-point-numbers-to-the-nearest-integer-in-c
 #define roundNumber(x) ((int)((x) < 0.0 ? (x)-0.5 : (x) + 0.5))
 
@@ -62,10 +43,6 @@ static void removeChannelInfo();
 static void removeVolumeInfo();
 static void removeMenuInfo();
 static void removeChannelNumberMessage();
-
-static graphicsControllerStatus formatAndDrawMenuShowName(const char *status, char *showname);
-static graphicsControllerStatus formatAndDrawMenuShowTimes(uint32_t startTime, uint32_t duration);
-static graphicsControllerStatus formatAndDrawShowDescription(char *source);
 
 graphicsControllerStatus graphicsControllerInit()
 {
@@ -119,8 +96,8 @@ graphicsControllerStatus drawChannelNumber(uint16_t channelNumberValue)
     DFBCHECK(dfbInterface->CreateFont(dfbInterface, "/home/galois/fonts/DejaVuSans.ttf", &fontDesc, &fontInterface));
     DFBCHECK(primary->SetFont(primary, fontInterface));
 
-    /* draw yellow #FFA500 channel number */
-    DFBCHECK(primary->SetColor(primary, 0xff, 0xa5, 0x00, COLOUR_WHITE));
+    /* draw  channel number */
+    DFBCHECK(primary->SetColor(primary, 0xff, 0xff, 0xff, COLOUR_WHITE));
     DFBCHECK(primary->DrawString(primary, channelNumberString, -1, screenHeight / 7, screenHeight / 7, DSTF_LEFT));
 
     return GRAPHICS_CONTROLLER_NO_ERROR;
@@ -136,7 +113,7 @@ graphicsControllerStatus drawChannelNumberMessage(uint16_t channelNumberValue)
         timerStopAndDelete(&timerChannelNumberMessage);
 
     char message[27];
-    sprintf(message, "Invalid channel number %d", channelNumberValue);
+    sprintf(message, "Channel %d doesn't exist ", channelNumberValue);
 
     clearScreen(COLOUR_BLACK);
 
@@ -148,12 +125,12 @@ graphicsControllerStatus drawChannelNumberMessage(uint16_t channelNumberValue)
     DFBCHECK(dfbInterface->CreateFont(dfbInterface, "/home/galois/fonts/DejaVuSans.ttf", &fontDesc, &fontInterface));
     DFBCHECK(primary->SetFont(primary, fontInterface));
 
-    /* draw yellow #FFA500 channel number */
-    DFBCHECK(primary->SetColor(primary, 0xff, 0xa5, 0x00, COLOUR_WHITE));
+    /* draw yellow #FFA500 channel number */ ///CHANGED TO WHITE
+    DFBCHECK(primary->SetColor(primary, 0xff, 0xff, 0xff, COLOUR_WHITE));
     DFBCHECK(primary->DrawString(primary, message, -1, screenHeight / 7, screenHeight / 7, DSTF_LEFT));
 
-    /* timer setup */
-    timerSetAndStart(&timerChannelNumberMessage, 2, removeChannelNumberMessage);
+    /* timer setup */ ///CHANGED from 2 to 4
+    timerSetAndStart(&timerChannelNumberMessage, 4, removeChannelNumberMessage);
 
     return GRAPHICS_CONTROLLER_NO_ERROR;
 }
@@ -174,7 +151,7 @@ graphicsControllerStatus drawChannelInfo(uint16_t channelNumberValue, uint8_t su
         sprintf(channelNumber, "Channel %d", channelNumberValue);
     }
 
-    int subtitlesArraySize = 5 * subtitleCount - 2; // (subtitleCount * 3) characters + (subtitleCount - 1) spaces + (subtitleCount - 1) commas + (1) '\0' - (1) index
+    int subtitlesArraySize = 5 * subtitleCount - 2; 
     char channelSubtitles[subtitlesArraySize];
 
     if (subtitleCount)
@@ -208,12 +185,12 @@ graphicsControllerStatus drawChannelInfo(uint16_t channelNumberValue, uint8_t su
 
     clearScreen(COLOUR_BLACK);
 
-    /* draw yellow #FFA500 info rectangle */
-    DFBCHECK(primary->SetColor(primary, 0xff, 0xa5, 0x00, COLOUR_WHITE));
+    /* draw purple info rectangle */ ///CHANGED INFO FRAME COLOR TO BLUE
+    DFBCHECK(primary->SetColor(primary, 0x80, 0x00, 0xff, COLOUR_WHITE));
     DFBCHECK(primary->FillRectangle(primary, screenWidth / 4, (5.3 * screenHeight) / 6.5, screenWidth / 2, screenHeight / 6));
 
-    /* draw grey #383838 info rectangle */
-    DFBCHECK(primary->SetColor(primary, 0x38, 0x38, 0x38, COLOUR_WHITE));
+    /* draw darkPurple info rectangle */ ///SECOND CHANGE TO PURPLE INFO FILL
+    DFBCHECK(primary->SetColor(primary, 0x5a, 0x00, 0xff, COLOUR_WHITE));
     DFBCHECK(primary->FillRectangle(primary, screenWidth / 4 + 5, (5.3 * screenHeight) / 6.5 + 5, screenWidth / 2 - 10, screenHeight / 6 - 10));
 
     /* specify the height of the font by raising the appropriate flag and setting the height value */
@@ -224,9 +201,9 @@ graphicsControllerStatus drawChannelInfo(uint16_t channelNumberValue, uint8_t su
     DFBCHECK(dfbInterface->CreateFont(dfbInterface, "/home/galois/fonts/DejaVuSans.ttf", &fontDesc, &fontInterface));
     DFBCHECK(primary->SetFont(primary, fontInterface));
 
-    /* draw yellow #FFA500 channel string information */
-    DFBCHECK(primary->SetColor(primary, 0xff, 0xa5, 0x00, COLOUR_WHITE));
-    DFBCHECK(primary->DrawString(primary, channelNumber, -1, screenWidth / 4 + 20, (5.3 * screenHeight) / 6.5 + 80, DSTF_LEFT));
+    /* draw yellow #FFA500 channel string information */ ///CHANGED - LETTERS AND POSITION OF CHANNEL NUMBER
+    DFBCHECK(primary->SetColor(primary, 0xff, 0xff, 0xff, COLOUR_WHITE));
+    DFBCHECK(primary->DrawString(primary, channelNumber, -1, screenWidth / 10 * 4 , (5.3 * screenHeight) / 6.5 + 80, DSTF_LEFT));
 
     /* specify the height of the font by raising the appropriate flag and setting the height value */
     fontDesc.flags = DFDESC_HEIGHT;
@@ -236,16 +213,21 @@ graphicsControllerStatus drawChannelInfo(uint16_t channelNumberValue, uint8_t su
     DFBCHECK(dfbInterface->CreateFont(dfbInterface, "/home/galois/fonts/DejaVuSans.ttf", &fontDesc, &fontInterface));
     DFBCHECK(primary->SetFont(primary, fontInterface));
 	char broj_subtitle_kanala[4];
+    char subs[10]="Subs: ";
+    int iterator = 0;
     if (subtitleCount)
     {   
-        DFBCHECK(primary->DrawString(primary, "Subs: ", -1, screenWidth / 4 + 20, (5.3 * screenHeight) / 6.5 + 140, DSTF_LEFT));
-       ///DFBCHECK(primary->DrawString(primary, channelSubtitles, -1, screenWidth / 4 + 150, (5.3 * screenHeight) / 6.5 + 140, DSTF_LEFT));
-		sprintf(broj_subtitle_kanala, "%d", subtitleCount);
-		DFBCHECK(primary->DrawString(primary,  broj_subtitle_kanala, -1, screenWidth / 4 + 150, (5.3 * screenHeight) / 6.5 + 140, DSTF_LEFT));
+
+        sprintf(broj_subtitle_kanala, "%d", subtitleCount);
+        for(iterator=0; iterator<4; iterator++){
+        subs[6+iterator]=broj_subtitle_kanala[iterator];
+        }
+        DFBCHECK(primary->DrawString(primary, subs, -1, screenWidth / 20 * 9, (5.3 * screenHeight) / 6.5 + 140, DSTF_LEFT));
+       
     }
     else
     {
-        DFBCHECK(primary->DrawString(primary, "No available subtitles", -1, screenWidth / 4 + 20, (5.3 * screenHeight) / 6.5 + 140, DSTF_LEFT));
+        DFBCHECK(primary->DrawString(primary, "No available subtitles", -1, screenWidth / 80 * 29, (5.3 * screenHeight) / 6.5 + 140, DSTF_LEFT));
     }
 
     /* timer setup */
@@ -259,6 +241,7 @@ graphicsControllerStatus drawChannelInfo(uint16_t channelNumberValue, uint8_t su
     return GRAPHICS_CONTROLLER_NO_ERROR;
 }
 
+
 graphicsControllerStatus drawVolumeInfo(float volumePercent)
 {
     if (timerChannelInfo)
@@ -268,77 +251,24 @@ graphicsControllerStatus drawVolumeInfo(float volumePercent)
     if (timerChannelNumberMessage)
         timerStopAndDelete(&timerChannelNumberMessage);
 
-    char volume[4]; // 3 digits + 1 % sign + 1 '\0' - 1 index
+    float volumePercent_1 = volumePercent + 0.01;
+    char volume[4]; // 2 digits +  % sign + '\0' 
     uint8_t volumePercentInt = roundNumber(volumePercent * 100);
-    uint16_t volumeDeg = roundNumber(volumePercent * 360);
+    
 
     clearScreen(COLOUR_BLACK);
 
     sprintf(volume, "%d%%", volumePercentInt);
+///ADDED
 
-    int x = screenWidth - screenWidth / 10;
-    int y = 150;
 
-    int radius = 120;
-    int16_t i;
-    uint16_t x1;
-    uint16_t x2;
-    uint16_t y1;
-    uint16_t y2;
+    DFBCHECK(primary->SetColor(primary, 0x5a, 0x00, 0xff, COLOUR_WHITE));
+    DFBCHECK(primary->FillRectangle(primary, screenWidth * 0.9 , screenHeight * 0.08, screenWidth / 14, screenHeight * 0.62));
+    DFBCHECK(primary->SetColor(primary, 0xff, 0xff, 0xff, COLOUR_WHITE));
+    DFBCHECK(primary->FillRectangle(primary, screenWidth * 0.91 , (screenHeight * 0.10) + ((1-volumePercent_1) * screenHeight * 0.5 ), screenWidth / 19, volumePercent_1 * screenHeight * 0.5 ));
+    DFBCHECK(primary->SetColor(primary, 0xff, 0xff, 0xff, COLOUR_WHITE));
+    DFBCHECK(primary->DrawRectangle(primary, screenWidth * 0.91 , screenHeight * 0.095 , screenWidth / 19, screenHeight * 0.5));
 
-    int16_t startDeg = -90;
-    int16_t endDeg = volumeDeg;
-
-    /* background circle */
-    endDeg -= 90;
-    x1 = x + radius * cos(DEGREES_TO_RADIANS(startDeg));
-    y1 = y + radius * sin(DEGREES_TO_RADIANS(startDeg));
-    for (i = startDeg + 1; i <= 360; i++)
-    {
-        x2 = x + radius * cos(DEGREES_TO_RADIANS(i));
-        y2 = y + radius * sin(DEGREES_TO_RADIANS(i));
-
-        DFBCHECK(primary->SetColor(primary, 0x38, 0x38, 0x38, 0xFF));
-        DFBCHECK(primary->FillTriangle(primary, x, y, x1, y1, x2, y2));
-
-        x1 = x2;
-        y1 = y2;
-    }
-
-    /* yellow #FFA500 volume circle */
-    startDeg = -90;
-
-    x1 = x + radius * cos(DEGREES_TO_RADIANS(startDeg));
-    y1 = y + radius * sin(DEGREES_TO_RADIANS(startDeg));
-
-    for (i = startDeg + 1; i <= endDeg; i++)
-    {
-        x2 = x + radius * cos(DEGREES_TO_RADIANS(i));
-        y2 = y + radius * sin(DEGREES_TO_RADIANS(i));
-
-        DFBCHECK(primary->SetColor(primary, 0xff, 0xa5, 0x00, COLOUR_WHITE));
-        DFBCHECK(primary->FillTriangle(primary, x, y, x1, y1, x2, y2));
-
-        x1 = x2;
-        y1 = y2;
-    }
-
-    /* foreground volume percent circle */
-    x1 = x + radius / 2 * cos(DEGREES_TO_RADIANS(startDeg));
-    y1 = y + radius / 2 * sin(DEGREES_TO_RADIANS(startDeg));
-    for (i = startDeg + 1; i <= 360; i++)
-    {
-        x2 = x + radius / 2 * cos(DEGREES_TO_RADIANS(i));
-        y2 = y + radius / 2 * sin(DEGREES_TO_RADIANS(i));
-
-        DFBCHECK(primary->SetColor(primary, 0x38, 0x38, 0x38, 0xFF));
-        DFBCHECK(primary->FillTriangle(primary, x, y, x1, y1, x2, y2));
-
-        x1 = x2;
-        y1 = y2;
-    }
-
-    /* specify the height of the font by raising the appropriate flag and setting the height value */
     fontDesc.flags = DFDESC_HEIGHT;
     fontDesc.height = 38;
 
@@ -346,9 +276,8 @@ graphicsControllerStatus drawVolumeInfo(float volumePercent)
     DFBCHECK(dfbInterface->CreateFont(dfbInterface, "/home/galois/fonts/DejaVuSans.ttf", &fontDesc, &fontInterface));
     DFBCHECK(primary->SetFont(primary, fontInterface));
 
-    /* draw yellow #FFA500 volume string information */
-    DFBCHECK(primary->SetColor(primary, 0xff, 0xa5, 0x00, COLOUR_WHITE));
-    DFBCHECK(primary->DrawString(primary, volume, -1, x - radius / 4 + 80, y + radius / 4 - 20, DSTF_RIGHT));
+    DFBCHECK(primary->SetColor(primary, 0xff, 0xff, 0xff, COLOUR_WHITE));
+    DFBCHECK(primary->DrawString(primary, volume, -1, screenWidth * 0.96, screenHeight * 0.68 , DSTF_RIGHT));
 
     /* timer setup */
     if (showingVolumeInfo)
@@ -357,111 +286,6 @@ graphicsControllerStatus drawVolumeInfo(float volumePercent)
     }
     timerSetAndStart(&timerVolumeInfo, 2, removeVolumeInfo);
     showingVolumeInfo = 1;
-
-    return GRAPHICS_CONTROLLER_NO_ERROR;
-}
-
-graphicsControllerStatus drawMenuInfo(uint32_t presentShowStartTime, uint32_t presentShowDuration, char *presentShowName, char *presentShowDescription,
-                                      uint32_t followingShowStartTime, uint32_t followingShowDuration, char *followingShowName, char *followingShowDescription,
-                                      uint8_t channelFlag)
-{
-    if (timerChannelInfo)
-        timerStopAndDelete(&timerChannelInfo);
-    if (timerVolumeInfo)
-        timerStopAndDelete(&timerVolumeInfo);
-    if (timerChannelNumberMessage)
-        timerStopAndDelete(&timerChannelNumberMessage);
-
-    if (channelFlag == 0)
-    {
-        removeMenuInfo();
-        return GRAPHICS_CONTROLLER_NO_ERROR;
-    }
-
-    clearScreen(COLOUR_BLACK);
-
-    /* draw yellow #FFA500 menu background rectangle */
-    DFBCHECK(primary->SetColor(primary, 0xff, 0xa5, 0x00, COLOUR_WHITE));
-    DFBCHECK(primary->FillRectangle(primary, screenWidth / 10, screenHeight / 6, (8 * screenWidth) / 10, (4 * screenHeight) / 6));
-
-    /* draw grey #383838 menu foreground rectangle */
-    DFBCHECK(primary->SetColor(primary, 0x38, 0x38, 0x38, COLOUR_WHITE));
-    DFBCHECK(primary->FillRectangle(primary, screenWidth / 10 + 5, screenHeight / 6 + 5, (8 * screenWidth) / 10 - 10, (4 * screenHeight) / 6 - 10));
-
-    /* draw yellow #FFA500 menu line rectangle */
-    DFBCHECK(primary->SetColor(primary, 0xff, 0xa5, 0x00, COLOUR_WHITE));
-    DFBCHECK(primary->FillRectangle(primary, screenWidth / 10, screenHeight / 6 + 100, (8 * screenWidth) / 10, 5));
-
-    /* specify the height of the font by raising the appropriate flag and setting the height value */
-    fontDesc.flags = DFDESC_HEIGHT;
-    fontDesc.height = 70;
-
-    /* create the font and set the created font for primary surface text drawing */
-    DFBCHECK(dfbInterface->CreateFont(dfbInterface, "/home/galois/fonts/DejaVuSans.ttf", &fontDesc, &fontInterface));
-    DFBCHECK(primary->SetFont(primary, fontInterface));
-
-    if (channelFlag == 1)
-    {
-        if ((presentShowStartTime != -1) && (presentShowDuration != -1))
-        { // CONFIGURATION_PARSER_NOT_SET == -1
-            if (presentShowName != NULL)
-                formatAndDrawMenuShowName("Now:", presentShowName);
-
-            formatAndDrawMenuShowTimes(presentShowStartTime, presentShowDuration);
-
-            if (presentShowDescription != NULL)
-                formatAndDrawShowDescription(presentShowDescription);
-
-            if (followingShowStartTime && followingShowDuration)
-            {
-                /* draw yellow #FFA500 right arrow */
-                DFBCHECK(primary->SetColor(primary, 0xff, 0xa5, 0x00, COLOUR_WHITE));
-                DFBCHECK(primary->FillRectangle(primary, (4 * screenWidth) / 6 + 100, (5 * screenHeight) / 6 - 100, 100, 50));
-
-                DFBCHECK(primary->FillTriangle(primary, (5 * screenWidth) / 6 - 125, (5 * screenHeight) / 6 - 125,
-                                               (5 * screenWidth) / 6 - 125, (5 * screenHeight) / 6 - 25,
-                                               (5 * screenWidth) / 6 - 25, (5 * screenHeight) / 6 - 75));
-            }
-        }
-        else
-        {
-            /* draw yellow #FFA500 show name string information */
-            DFBCHECK(primary->SetColor(primary, 0xff, 0xa5, 0x00, COLOUR_WHITE));
-            DFBCHECK(primary->DrawString(primary, "Information Not Available!", -1, screenWidth / 10 + 20, screenHeight / 6 + 300, DSTF_LEFT));
-        }
-    }
-
-    if (channelFlag == 2)
-    {
-        if ((followingShowStartTime != -1) && (followingShowStartTime != -1))
-        { // CONFIGURATION_PARSER_NOT_SET == -1
-            if (followingShowName != NULL)
-                formatAndDrawMenuShowName("Next:", followingShowName);
-
-            formatAndDrawMenuShowTimes(followingShowStartTime, followingShowDuration);
-
-            if (followingShowDescription != NULL)
-                formatAndDrawShowDescription(followingShowDescription);
-
-            if (presentShowStartTime && presentShowDuration)
-            {
-                /* draw yellow #FFA500 left arrow */
-                DFBCHECK(primary->SetColor(primary, 0xff, 0xa5, 0x00, COLOUR_WHITE));
-                DFBCHECK(primary->FillRectangle(primary, screenWidth / 6 + 125, (5 * screenHeight) / 6 - 100, 100, 50));
-
-                DFBCHECK(primary->FillTriangle(primary, (screenWidth) / 6 + 125, (5 * screenHeight) / 6 - 125,
-                                               (screenWidth) / 6 + 125, (5 * screenHeight) / 6 - 25,
-                                               (screenWidth) / 6 + 25, (5 * screenHeight) / 6 - 75));
-            }
-        }
-
-        else
-        {
-            /* draw yellow #FFA500 show name string information */
-            DFBCHECK(primary->SetColor(primary, 0xff, 0xa5, 0x00, COLOUR_WHITE));
-            DFBCHECK(primary->DrawString(primary, "Information Not Available!", -1, screenWidth / 10 + 20, screenHeight / 6 + 300, DSTF_LEFT));
-        }
-    }
 
     return GRAPHICS_CONTROLLER_NO_ERROR;
 }
@@ -507,15 +331,6 @@ static void removeVolumeInfo()
     }
 }
 
-/****************************************************************************
- * @brief    Function for removing menu information banner from screen at timer trigger.
-****************************************************************************/
-static void removeMenuInfo()
-{
-    clearScreen(COLOUR_BLACK);
-    drawOnScreen();
-    clearScreen(COLOUR_BLACK);
-}
 
 /****************************************************************************
  * @brief    Function for removing channel number message from screen at timer trigger.
@@ -527,118 +342,3 @@ static void removeChannelNumberMessage()
     clearScreen(COLOUR_BLACK);
 }
 
-/****************************************************************************
- * @brief    Function for drawing menu information banner show name.
- *
- * @param    status - [in] String marking show running status, "Now" or "Next".
- *           showName - [in] Show name string.
- *
- * @return   GRAPHICS_CONTROLLER_NO_ERROR, if there are no errors.
- *           GRAPHICS_CONTROLLER_ERROR, in case of an error.
-****************************************************************************/
-static graphicsControllerStatus formatAndDrawMenuShowName(const char *status, char *showName)
-{
-    /* draw yellow #FFA500 Now or Next string information */
-    DFBCHECK(primary->SetColor(primary, 0xff, 0xa5, 0x00, COLOUR_WHITE));
-    DFBCHECK(primary->DrawString(primary, status, -1, screenWidth / 10 + 20, (screenHeight) / 6 + 85, DSTF_LEFT));
-
-    /* draw yellow #FFA500 show name string information */
-    DFBCHECK(primary->SetColor(primary, 0xff, 0xa5, 0x00, COLOUR_WHITE));
-    DFBCHECK(primary->DrawString(primary, showName, -1, screenWidth / 10 + 200, (screenHeight) / 6 + 85, DSTF_LEFT));
-
-    return GRAPHICS_CONTROLLER_NO_ERROR;
-}
-
-/****************************************************************************
- * @brief    Function for drawing menu information banner show times.
- *
- * @param    startTime - [in] Show start time value.
- *           duration - [in] Show duration value.
- *
- * @return   GRAPHICS_CONTROLLER_NO_ERROR, if there are no errors.
- *           GRAPHICS_CONTROLLER_ERROR, in case of an error.
-****************************************************************************/
-static graphicsControllerStatus formatAndDrawMenuShowTimes(uint32_t startTime, uint32_t duration)
-{
-    char startTimeString[6];
-    char durationString[8];
-
-    uint16_t hrs;
-    uint16_t min;
-
-    hrs = startTime >> 16;
-    min = (startTime >> 8) & 0x00FF;
-    sprintf(startTimeString, "%d%d:%d%d", hrs >> 4, hrs & 0x0F, min >> 4, min & 0x0F);
-
-    hrs = duration >> 16;
-    min = (duration >> 8) & 0x00FF;
-    sprintf(durationString, "%d min", (hrs * 60) + ((min >> 4) * 10) + (min & 0x0f));
-
-    /* draw yellow #FFA500 show start time string information */
-    DFBCHECK(primary->SetColor(primary, 0xff, 0xa5, 0x00, COLOUR_WHITE));
-    DFBCHECK(primary->DrawString(primary, startTimeString, -1, screenWidth / 10 + 20, screenHeight / 6 + 200, DSTF_LEFT));
-
-    /* draw yellow #FFA500 show run time string information */
-    DFBCHECK(primary->SetColor(primary, 0xff, 0xa5, 0x00, COLOUR_WHITE));
-    DFBCHECK(primary->DrawString(primary, durationString, -1, (5 * screenWidth) / 6 - 150, screenHeight / 6 + 200, DSTF_LEFT));
-
-    return GRAPHICS_CONTROLLER_NO_ERROR;
-}
-
-/****************************************************************************
- * @brief    Function for drawing menu information banner show description.
- *
- * @param    source - [in] Show description string.
- *
- * @return   GRAPHICS_CONTROLLER_NO_ERROR, if there are no errors.
- *           GRAPHICS_CONTROLLER_ERROR, in case of an error.
-****************************************************************************/
-static graphicsControllerStatus formatAndDrawShowDescription(char *source)
-{
-    /* specify the height of the font by raising the appropriate flag and setting the height value */
-    fontDesc.flags = DFDESC_HEIGHT;
-    fontDesc.height = 50;
-
-    /* create the font and set the created font for primary surface text drawing */
-    DFBCHECK(dfbInterface->CreateFont(dfbInterface, "/home/galois/fonts/DejaVuSans.ttf", &fontDesc, &fontInterface));
-    DFBCHECK(primary->SetFont(primary, fontInterface));
-
-    int i = 0;
-    int j;
-    char buffer[255];
-
-    while (source[i] != '\0')
-    {
-        buffer[i] = source[i];
-        i++;
-    }
-    buffer[i] = '\0';
-
-    char *temp;
-    temp = buffer;
-
-    for (i = 0; i < 5; i++)
-    { // maximum 5 rows
-        j = 0;
-        while (temp[j] != '\0' && j < 54)
-        {
-            j++; // maximum 54 characters per row
-        }
-        if (j == 54)
-        {
-            while (temp[j] != ' ' && j > 0)
-            {
-                j--;
-            }
-        }
-
-        DFBCHECK(primary->DrawString(primary, temp, j, screenWidth / 10 + 20, screenHeight / 6 + 300 + i * 100, DSTF_LEFT));
-
-        if (temp[j] == '\0')
-            break;
-        temp = (char *)(temp + j);
-    }
-
-    return GRAPHICS_CONTROLLER_NO_ERROR;
-}
-/* -------------------- HELPER FUNCTIONS -------------------- */

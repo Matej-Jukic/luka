@@ -1,21 +1,3 @@
-/***************************************************************************************
- * Faculty of Electrical Engineering, Computer Science and Information Technology Osijek
- *
- * -----------------------------------------------------
- * Project assignment from the course: DIGITAL IMAGE PROCESSING DAKR4I-01
- * -----------------------------------------------------
- * Assignment title: TV application (code: PPUTVIOS_20_2018_OS)
- * -----------------------------------------------------
- * \file remote_controller.c
- *
- * \brief
- * Implementation of the module for remote controller events.
- *
- * Last updated on 4 June 2018
- *
- * @Author Luka Umiljanović
- ***************************************************************************************/
-
 #include "remote_controller.h"
 
 #include <linux/input.h>
@@ -138,12 +120,12 @@ void *remoteControllerEvent()
                 case REMOTE_KEY_MENU:
                     if (!showingMenuInfo)
                     {
-                        showMenuInfo(1);
+                        //showMenuInfo(1);
                         showingMenuInfo = 1;
                     }
                     else
                     {
-                        showMenuInfo(0);
+                        //showMenuInfo(0);
                         showingMenuInfo = 0;
                     }
                     break;
@@ -151,14 +133,14 @@ void *remoteControllerEvent()
                 case REMOTE_KEY_LEFT_ARROW:
                     if (showingMenuInfo)
                     {
-                        showMenuInfo(1);
+                        ///showMenuInfo(1);
                     }
                     break;
 
                 case REMOTE_KEY_RIGHT_ARROW:
                     if (showingMenuInfo)
                     {
-                        showMenuInfo(2);
+                        ///showMenuInfo(2);
                     }
                     break;
 

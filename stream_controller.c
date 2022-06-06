@@ -1,21 +1,3 @@
-/***************************************************************************************
- * Faculty of Electrical Engineering, Computer Science and Information Technology Osijek
- *
- * -----------------------------------------------------
- * Project assignment from the course: DIGITAL IMAGE PROCESSING DAKR4I-01
- * -----------------------------------------------------
- * Assignment title: TV application (code: PPUTVIOS_20_2018_OS)
- * -----------------------------------------------------
- * \file stream_controller.c
- *
- * \brief
- * Implementation of the module for handling tuner, player and channels.
- *
- * Last updated on 4 June 2018
- *
- * @Author Luka Umiljanović
- ***************************************************************************************/
-
 #include "stream_controller.h"
 
 #include "tables_parser.h"
@@ -394,21 +376,21 @@ streamControllerStatus showVolumeInfo()
     return STREAM_CONTROLLER_NO_ERROR;
 }
 
-streamControllerStatus showMenuInfo(uint8_t channelFlag)
-{
-    uint8_t result;
+// streamControllerStatus showMenuInfo(uint8_t channelFlag)
+// {
+//     uint8_t result;
 
-    result = drawMenuInfo(channels.channel[currentChannel].presentShowStartTime, channels.channel[currentChannel].presentShowDuration,
-                          channels.channel[currentChannel].presentShowName, channels.channel[currentChannel].presentShowDescription,
-                          channels.channel[currentChannel].followingShowStartTime, channels.channel[currentChannel].followingShowDuration,
-                          channels.channel[currentChannel].followingShowName, channels.channel[currentChannel].followingShowDescription,
-                          channelFlag);
-    ASSERT_TDP_RESULT(result, "showMenuInfo: drawMenuInfo");
+//     result = drawMenuInfo(channels.channel[currentChannel].presentShowStartTime, channels.channel[currentChannel].presentShowDuration,
+//                           channels.channel[currentChannel].presentShowName, channels.channel[currentChannel].presentShowDescription,
+//                           channels.channel[currentChannel].followingShowStartTime, channels.channel[currentChannel].followingShowDuration,
+//                           channels.channel[currentChannel].followingShowName, channels.channel[currentChannel].followingShowDescription,
+//                           channelFlag);
+//     ASSERT_TDP_RESULT(result, "showMenuInfo: drawMenuInfo");
 
-    drawOnScreen();
+//     drawOnScreen();
 
-    return STREAM_CONTROLLER_NO_ERROR;
-}
+//     return STREAM_CONTROLLER_NO_ERROR;
+// }
 
 streamControllerStatus showChannelNumber(uint16_t channelNumberValue)
 {
